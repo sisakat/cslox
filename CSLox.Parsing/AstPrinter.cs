@@ -80,5 +80,15 @@ namespace CSLox.Parsing
         {
             throw new NotImplementedException();
         }
+
+        public string VisitIfStmt(Stmt.If stmt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string VisitLogicalExpr(Expr.Logical expr)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

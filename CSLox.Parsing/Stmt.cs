@@ -10,6 +10,7 @@ namespace CSLox.Parsing
         {
             R VisitBlockStmt(Block stmt);
             R VisitExpressionStmt(Expression stmt);
+            R VisitIfStmt(If stmt);
             R VisitPrintStmt(Print stmt);
             R VisitVarStmt(Var stmt);
         }
@@ -44,6 +45,29 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitExpressionStmt(this);
+            }
+        }
+
+        public class If : Stmt
+        {
+            readonly Expr condition;
+            readonly Stmt thenBranch;
+            readonly Stmt elseBranch;
+
+            public Expr Condition => condition;
+            public Stmt ThenBranch => thenBranch;
+            public Stmt ElseBranch => elseBranch;
+
+            public If (Expr condition, Stmt thenBranch, Stmt elseBranch)
+            {
+                this.condition = condition;
+                this.thenBranch = thenBranch;
+                this.elseBranch = elseBranch;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitIfStmt(this);
             }
         }
 
