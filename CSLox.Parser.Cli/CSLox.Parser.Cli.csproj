@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CSLox.Parser\CSLox.Parser.csproj" />
-    <ProjectReference Include="..\CSLox.Interpreter\CSLox.Interpreter.csproj" />
+    <ProjectReference Include="..\CSLox.Lexer\CSLox.Lexer.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

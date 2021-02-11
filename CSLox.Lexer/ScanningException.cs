@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CSLox.Interpreter
+namespace CSLox.Lexer
 {
     public class ScanningException : Exception 
     {

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\CSLox.Interpreter\CSLox.Interpreter.csproj" />
+    <ProjectReference Include="..\CSLox.Lexer\CSLox.Lexer.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

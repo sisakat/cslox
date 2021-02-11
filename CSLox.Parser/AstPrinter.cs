@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CSLox.Interpreter;
+using CSLox.Lexer;
 
 namespace CSLox.Parser
 {

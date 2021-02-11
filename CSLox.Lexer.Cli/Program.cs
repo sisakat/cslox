@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace CSLox.Interpreter.Cli
+namespace CSLox.Lexer.Cli
 {
     class Program
     {

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Interpreter", "CSLox.Interpreter\CSLox.Interpreter.csproj", "{3E64C529-BAA3-4CAA-A878-EB8F726D8717}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Lexer", "CSLox.Lexer\CSLox.Lexer.csproj", "{3E64C529-BAA3-4CAA-A878-EB8F726D8717}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Interpreter.Cli", "CSLox.Interpreter.Cli\CSLox.Interpreter.Cli.csproj", "{EFA120EA-FF2C-48CF-BA01-E3106A593358}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Lexer.Cli", "CSLox.Lexer.Cli\CSLox.Lexer.Cli.csproj", "{EFA120EA-FF2C-48CF-BA01-E3106A593358}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parser", "CSLox.Parser\CSLox.Parser.csproj", "{2BF4CC1F-2AE8-484F-8D97-E2F04F15FDD9}"
 EndProject

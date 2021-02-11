@@ -1,6 +1,6 @@
 using System;
 
-namespace CSLox.Interpreter
+namespace CSLox.Lexer
 {
     public class Token 
     {

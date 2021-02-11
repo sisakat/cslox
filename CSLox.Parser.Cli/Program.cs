@@ -1,6 +1,6 @@
 ﻿using System;
 using CSLox.Parser;
-using CSLox.Interpreter;
+using CSLox.Lexer;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
