@@ -1,0 +1,1 @@
+This is a project to make myself familiar with compilers using the Bob Nystroms' book [*Crafting Interpreters*](http://craftinginterpreters.com). I used C# for the implementation.
