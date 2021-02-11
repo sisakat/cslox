@@ -18,6 +18,7 @@ namespace CSLox.Parsing.AstGenerator
             string outputDirectory = args[0];
 
             DefineAst(outputDirectory, "Expr", new List<string>() {
+                "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token oper, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
@@ -26,6 +27,7 @@ namespace CSLox.Parsing.AstGenerator
             });
 
             DefineAst(outputDirectory, "Stmt", new List<string>() {
+                "Block      : List<Stmt> statements",
                 "Expression : Expr expr",
                 "Print      : Expr expr",
                 "Var        : Token name, Expr initializer"

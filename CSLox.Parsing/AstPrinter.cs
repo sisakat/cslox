@@ -70,5 +70,15 @@ namespace CSLox.Parsing
         {
             throw new NotImplementedException();
         }
+
+        public string VisitAssignExpr(Expr.Assign expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string VisitBlockStmt(Stmt.Block stmt)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

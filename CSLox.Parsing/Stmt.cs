@@ -8,10 +8,28 @@ namespace CSLox.Parsing
     {
         public interface Visitor<R>
         {
+            R VisitBlockStmt(Block stmt);
             R VisitExpressionStmt(Expression stmt);
             R VisitPrintStmt(Print stmt);
             R VisitVarStmt(Var stmt);
         }
+        public class Block : Stmt
+        {
+            readonly List<Stmt> statements;
+
+            public List<Stmt> Statements => statements;
+
+            public Block (List<Stmt> statements)
+            {
+                this.statements = statements;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitBlockStmt(this);
+            }
+        }
+
         public class Expression : Stmt
         {
             readonly Expr expr;

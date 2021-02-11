@@ -19,7 +19,24 @@ namespace CSLox.Interpreting
 
         private void Execute(Stmt statement)
         {
-            statement.Accept(this);
+            statement?.Accept(this);
+        }
+
+        private void ExecuteBlock(List<Stmt> statements, Environment environment)
+        {
+            Environment previous = this.environment;
+            try
+            {
+                this.environment = environment;
+
+                foreach (var statement in statements) 
+                {
+                    Execute(statement);
+                }
+            } finally
+            {
+                this.environment = previous;
+            }
         }
 
         public object VisitBinaryExpr(Expr.Binary expr)
@@ -98,6 +115,18 @@ namespace CSLox.Interpreting
             }
         }
 
+        public object VisitAssignExpr(Expr.Assign expr) 
+        {
+            object value = Evaluate(expr.Value);
+            environment.Assign(expr.Name, value);
+            return value;
+        }
+
+        public object VisitVariableExpr(Expr.Variable expr)
+        {
+            return environment.Get(expr.Name);
+        }
+
         public object VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.Expr);
@@ -111,11 +140,6 @@ namespace CSLox.Interpreting
             return null;
         }
 
-        public object VisitVariableExpr(Expr.Variable expr)
-        {
-            return environment.Get(expr.Name);
-        }
-
         public object VisitVarStmt(Stmt.Var stmt)
         {
             object value = null;
@@ -125,6 +149,12 @@ namespace CSLox.Interpreting
             }
 
             environment.Define(stmt.Name.Lexeme, value);
+            return null;
+        }
+
+        public object VisitBlockStmt(Stmt.Block stmt)
+        {
+            ExecuteBlock(stmt.Statements, new Environment(environment));
             return null;
         }
 
