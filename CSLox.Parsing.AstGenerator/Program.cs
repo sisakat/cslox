@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace CSLox.Parser.AstGenerator
+namespace CSLox.Parsing.AstGenerator
 {
     class Program
     {
@@ -34,7 +34,7 @@ namespace CSLox.Parser.AstGenerator
             builder.AppendLine("using System.Collections.Generic;");
             builder.AppendLine("using CSLox.Interpreter;");
             builder.AppendLine("");
-            builder.AppendLine("namespace CSLox.Parser");
+            builder.AppendLine("namespace CSLox.Parsing");
             builder.AppendLine("{");
 
             builder.AppendLine($"    public abstract class {baseName}");

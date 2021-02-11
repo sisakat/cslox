@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\CSLox.Parser\CSLox.Parser.csproj" />
+    <ProjectReference Include="..\CSLox.Interpreting\CSLox.Interpreting.csproj" />
     <ProjectReference Include="..\CSLox.Lexer\CSLox.Lexer.csproj" />
+    <ProjectReference Include="..\CSLox.Parsing\CSLox.Parsing.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

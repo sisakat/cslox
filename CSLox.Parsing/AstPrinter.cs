@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CSLox.Lexer;
 
-namespace CSLox.Parser
+namespace CSLox.Parsing
 {
     public class AstPrinter : Expr.Visitor<string>
     {

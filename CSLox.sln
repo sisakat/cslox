@@ -7,11 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Lexer", "CSLox.Lexer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Lexer.Cli", "CSLox.Lexer.Cli\CSLox.Lexer.Cli.csproj", "{EFA120EA-FF2C-48CF-BA01-E3106A593358}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parser", "CSLox.Parser\CSLox.Parser.csproj", "{2BF4CC1F-2AE8-484F-8D97-E2F04F15FDD9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parsing", "CSLox.Parsing\CSLox.Parsing.csproj", "{2BF4CC1F-2AE8-484F-8D97-E2F04F15FDD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parser.AstGenerator", "CSLox.Parser.AstGenerator\CSLox.Parser.AstGenerator.csproj", "{7F80D49C-B3F4-48A4-A73A-58BD049C9922}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parsing.AstGenerator", "CSLox.Parsing.AstGenerator\CSLox.Parsing.AstGenerator.csproj", "{7F80D49C-B3F4-48A4-A73A-58BD049C9922}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parser.Cli", "CSLox.Parser.Cli\CSLox.Parser.Cli.csproj", "{D1ECA642-0769-4048-A21E-ECB9FFCB8D2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Parsing.Cli", "CSLox.Parsing.Cli\CSLox.Parsing.Cli.csproj", "{D1ECA642-0769-4048-A21E-ECB9FFCB8D2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Interpreting", "CSLox.Interpreting\CSLox.Interpreting.csproj", "{2612B005-F6F1-486E-A0A4-5883801EA280}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSLox.Interpreting.Cli", "CSLox.Interpreting.Cli\CSLox.Interpreting.Cli.csproj", "{1FD4E467-98D8-4907-88A2-C7BCF2B68353}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
@@ -86,5 +90,29 @@ Global
 		{D1ECA642-0769-4048-A21E-ECB9FFCB8D2F}.Release|x64.Build.0 = Release|Any CPU
 		{D1ECA642-0769-4048-A21E-ECB9FFCB8D2F}.Release|x86.ActiveCfg = Release|Any CPU
 		{D1ECA642-0769-4048-A21E-ECB9FFCB8D2F}.Release|x86.Build.0 = Release|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Debug|x64.Build.0 = Debug|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Debug|x86.Build.0 = Debug|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Release|x64.ActiveCfg = Release|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Release|x64.Build.0 = Release|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Release|x86.ActiveCfg = Release|Any CPU
+		{2612B005-F6F1-486E-A0A4-5883801EA280}.Release|x86.Build.0 = Release|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Debug|x64.Build.0 = Debug|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Debug|x86.Build.0 = Debug|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Release|x64.ActiveCfg = Release|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Release|x64.Build.0 = Release|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Release|x86.ActiveCfg = Release|Any CPU
+		{1FD4E467-98D8-4907-88A2-C7BCF2B68353}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

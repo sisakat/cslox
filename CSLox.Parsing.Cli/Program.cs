@@ -1,11 +1,11 @@
 ﻿using System;
-using CSLox.Parser;
+using CSLox.Parsing;
 using CSLox.Lexer;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CSLox.Parser.Cli
+namespace CSLox.Parsing.Cli
 {
     class Program
     {

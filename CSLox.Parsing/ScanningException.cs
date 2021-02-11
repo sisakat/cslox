@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using CSLox.Lexer;
 
-namespace CSLox.Parser
+namespace CSLox.Parsing
 {
     public class ParsingException : Exception 
     {
