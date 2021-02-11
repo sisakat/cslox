@@ -57,6 +57,7 @@ namespace CSLox.Interpreting
             if (enclosing != null)
             {
                 enclosing.Assign(name, value);
+                return;
             }
 
             throw new InterpretingException(name, $"Undefined variable '{name.Lexeme}'.");

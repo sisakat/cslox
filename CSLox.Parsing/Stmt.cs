@@ -13,6 +13,7 @@ namespace CSLox.Parsing
             R VisitIfStmt(If stmt);
             R VisitPrintStmt(Print stmt);
             R VisitVarStmt(Var stmt);
+            R VisitWhileStmt(While stmt);
         }
         public class Block : Stmt
         {
@@ -105,6 +106,26 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitVarStmt(this);
+            }
+        }
+
+        public class While : Stmt
+        {
+            readonly Expr condition;
+            readonly Stmt body;
+
+            public Expr Condition => condition;
+            public Stmt Body => body;
+
+            public While (Expr condition, Stmt body)
+            {
+                this.condition = condition;
+                this.body = body;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitWhileStmt(this);
             }
         }
 

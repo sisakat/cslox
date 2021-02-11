@@ -90,5 +90,10 @@ namespace CSLox.Parsing
         {
             throw new NotImplementedException();
         }
+
+        public string VisitWhileStmt(Stmt.While stmt)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
