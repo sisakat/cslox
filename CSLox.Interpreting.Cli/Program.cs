@@ -17,7 +17,7 @@ namespace CSLox.Interpreting.Cli
             if (args.Length > 1)
             {
                 Console.WriteLine("Usage: cslox [script]");
-                Environment.Exit(64);
+                System.Environment.Exit(64);
             } else if (args.Length == 1) 
             {
                 RunFile(args[0]);
@@ -32,7 +32,7 @@ namespace CSLox.Interpreting.Cli
         {
             string input = File.ReadAllText(path);
             Run(input);
-            if (hadError) Environment.Exit(65);
+            if (hadError) System.Environment.Exit(65);
         }
 
         private static void RunPrompt()
@@ -55,9 +55,8 @@ namespace CSLox.Interpreting.Cli
             {
                 IEnumerable<Token> tokens = scanner.ScanTokens();
                 Parser parser = new Parser(tokens.ToList());
-                Expr expression = parser.Parse();
-                object output = interpreter.Interpret(expression);
-                Console.WriteLine(output.ToString());
+                List<Stmt> statements = parser.Parse();
+                interpreter.Interpret(statements);
             } catch (ScanningException ex)
             {
                 Error(ex.Line, ex.Message);

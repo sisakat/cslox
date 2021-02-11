@@ -12,6 +12,7 @@ namespace CSLox.Parsing
             R VisitGroupingExpr(Grouping expr);
             R VisitLiteralExpr(Literal expr);
             R VisitUnaryExpr(Unary expr);
+            R VisitVariableExpr(Variable expr);
         }
         public class Binary : Expr
         {
@@ -35,6 +36,7 @@ namespace CSLox.Parsing
                 return visitor.VisitBinaryExpr(this);
             }
         }
+
         public class Grouping : Expr
         {
             readonly Expr expression;
@@ -51,6 +53,7 @@ namespace CSLox.Parsing
                 return visitor.VisitGroupingExpr(this);
             }
         }
+
         public class Literal : Expr
         {
             readonly Object value;
@@ -67,6 +70,7 @@ namespace CSLox.Parsing
                 return visitor.VisitLiteralExpr(this);
             }
         }
+
         public class Unary : Expr
         {
             readonly Token oper;
@@ -86,6 +90,24 @@ namespace CSLox.Parsing
                 return visitor.VisitUnaryExpr(this);
             }
         }
+
+        public class Variable : Expr
+        {
+            readonly Token name;
+
+            public Token Name => name;
+
+            public Variable (Token name)
+            {
+                this.name = name;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitVariableExpr(this);
+            }
+        }
+
 
         public abstract R Accept<R>(Visitor<R> visitor);
     }

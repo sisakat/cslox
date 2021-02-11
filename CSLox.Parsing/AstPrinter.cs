@@ -5,11 +5,16 @@ using CSLox.Lexer;
 
 namespace CSLox.Parsing
 {
-    public class AstPrinter : Expr.Visitor<string>
+    public class AstPrinter : Expr.Visitor<string>, Stmt.Visitor<string>
     {
-        public string Print(Expr expr)
+        public string Print(List<Stmt> statements)
         {
-            return expr.Accept(this);
+            var builder = new StringBuilder();
+            foreach (var statement in statements)
+            {
+                builder.AppendLine(statement.Accept(this));
+            }
+            return builder.ToString();
         }
 
         public string Paranthesize(string lexeme, params Expr[] exprs)
@@ -44,6 +49,26 @@ namespace CSLox.Parsing
         public string VisitUnaryExpr(Expr.Unary expr)
         {
             return Paranthesize(expr.Oper.Lexeme, expr.Right);
+        }
+
+        public string VisitExpressionStmt(Stmt.Expression stmt)
+        {
+            return stmt.Expr.Accept(this);
+        }
+
+        public string VisitPrintStmt(Stmt.Print stmt)
+        {
+            return stmt.Expr.Accept(this);
+        }
+
+        public string VisitVariableExpr(Expr.Variable expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string VisitVarStmt(Stmt.Var stmt)
+        {
+            throw new NotImplementedException();
         }
     }
 }

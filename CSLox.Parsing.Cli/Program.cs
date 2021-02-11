@@ -54,9 +54,8 @@ namespace CSLox.Parsing.Cli
             {
                 IEnumerable<Token> tokens = scanner.ScanTokens();
                 Parser parser = new Parser(tokens.ToList());
-                Expr expression = parser.Parse();
-
-                Console.WriteLine(new AstPrinter().Print(expression));
+                List<Stmt> statements = parser.Parse();
+                Console.WriteLine(new AstPrinter().Print(statements));
             } catch (ScanningException ex)
             {
                 Error(ex.Line, ex.Message);

@@ -1,15 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using CSLox.Lexer;
 using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
-    public class Interpreter : Expr.Visitor<Object>
+    public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Object>
     {
-        public object Interpret(Expr expression)
+        private Environment environment = new Environment();
+
+        public void Interpret(List<Stmt> statements)
         {
-            object value = Evaluate(expression);
-            return value;
+            foreach (var statement in statements) 
+            {
+                Execute(statement);
+            }
+        }
+
+        private void Execute(Stmt statement)
+        {
+            statement.Accept(this);
         }
 
         public object VisitBinaryExpr(Expr.Binary expr)
@@ -86,6 +96,36 @@ namespace CSLox.Interpreting
                 default:
                     return null;
             }
+        }
+
+        public object VisitExpressionStmt(Stmt.Expression stmt)
+        {
+            Evaluate(stmt.Expr);
+            return null;
+        }
+
+        public object VisitPrintStmt(Stmt.Print stmt)
+        {
+            object value = Evaluate(stmt.Expr);
+            Console.WriteLine(value);
+            return null;
+        }
+
+        public object VisitVariableExpr(Expr.Variable expr)
+        {
+            return environment.Get(expr.Name);
+        }
+
+        public object VisitVarStmt(Stmt.Var stmt)
+        {
+            object value = null;
+            if (stmt.Initializer != null)
+            {
+                value = Evaluate(stmt.Initializer);
+            }
+
+            environment.Define(stmt.Name.Lexeme, value);
+            return null;
         }
 
         private bool IsEqual(object a, object b)

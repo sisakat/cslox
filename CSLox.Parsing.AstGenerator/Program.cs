@@ -16,11 +16,19 @@ namespace CSLox.Parsing.AstGenerator
             }
 
             string outputDirectory = args[0];
+
             DefineAst(outputDirectory, "Expr", new List<string>() {
                 "Binary   : Expr left, Token oper, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
-                "Unary    : Token oper, Expr right"
+                "Unary    : Token oper, Expr right",
+                "Variable : Token name"
+            });
+
+            DefineAst(outputDirectory, "Stmt", new List<string>() {
+                "Expression : Expr expr",
+                "Print      : Expr expr",
+                "Var        : Token name, Expr initializer"
             });
         }
 
@@ -32,7 +40,7 @@ namespace CSLox.Parsing.AstGenerator
 
             builder.AppendLine("using System;");
             builder.AppendLine("using System.Collections.Generic;");
-            builder.AppendLine("using CSLox.Interpreter;");
+            builder.AppendLine("using CSLox.Lexer;");
             builder.AppendLine("");
             builder.AppendLine("namespace CSLox.Parsing");
             builder.AppendLine("{");
@@ -105,6 +113,7 @@ namespace CSLox.Parsing.AstGenerator
             builder.AppendLine("            }");
 
             builder.AppendLine("        }");
+            builder.AppendLine("");
         }
 
         private static void DefineVisitor(StringBuilder builder,
