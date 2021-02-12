@@ -11,9 +11,11 @@ namespace CSLox.Parsing
             R VisitBlockStmt(Block stmt);
             R VisitBreakStmt(Break stmt);
             R VisitExpressionStmt(Expression stmt);
+            R VisitFunctionStmt(Function stmt);
             R VisitIfStmt(If stmt);
             R VisitPrintStmt(Print stmt);
             R VisitVarStmt(Var stmt);
+            R VisitReturnStmt(Return stmt);
             R VisitWhileStmt(While stmt);
         }
         public class Block : Stmt
@@ -61,6 +63,29 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitExpressionStmt(this);
+            }
+        }
+
+        public class Function : Stmt
+        {
+            readonly Token name;
+            readonly List<Token> parameters;
+            readonly List<Stmt> body;
+
+            public Token Name => name;
+            public List<Token> Parameters => parameters;
+            public List<Stmt> Body => body;
+
+            public Function (Token name, List<Token> parameters, List<Stmt> body)
+            {
+                this.name = name;
+                this.parameters = parameters;
+                this.body = body;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitFunctionStmt(this);
             }
         }
 
@@ -121,6 +146,26 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitVarStmt(this);
+            }
+        }
+
+        public class Return : Stmt
+        {
+            readonly Token keyword;
+            readonly Expr value;
+
+            public Token Keyword => keyword;
+            public Expr Value => value;
+
+            public Return (Token keyword, Expr value)
+            {
+                this.keyword = keyword;
+                this.value = value;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitReturnStmt(this);
             }
         }
 

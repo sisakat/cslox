@@ -5,10 +5,21 @@ using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
+    public delegate void Error(Token token, string message);
     public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Object>
     {
-        private Environment environment = new Environment();
+        internal readonly Environment globals = new Environment();
+        private Environment environment;
         private bool breaking = false;
+
+        public event Error OnError;
+
+        public Interpreter()
+        {
+            environment = globals;
+
+            globals.Define("clock", new Clock());
+        }
 
         public void Interpret(List<Stmt> statements)
         {
@@ -23,7 +34,7 @@ namespace CSLox.Interpreting
             statement?.Accept(this);
         }
 
-        private void ExecuteBlock(List<Stmt> statements, Environment environment)
+        internal void ExecuteBlock(List<Stmt> statements, Environment environment)
         {
             Environment previous = this.environment;
             try
@@ -94,6 +105,31 @@ namespace CSLox.Interpreting
             return null;
         }
 
+        public object VisitCallExpr(Expr.Call expr)
+        {
+            object callee = Evaluate(expr.Callee);
+
+            List<object> arguments = new List<object>();
+            foreach (var argument in expr.Arguments)
+            {
+                arguments.Add(Evaluate(argument));
+            }
+
+            if (!(callee is ICallable))
+            {
+                throw new InterpretingException(expr.Paren,
+                    "Can only call functions and classes.");
+            }
+
+            ICallable function = (ICallable)callee;
+            if (arguments.Count != function.Arity)
+            {
+                throw new InterpretingException(expr.Paren,
+                    $"Expected {function.Arity} arguments but got {arguments.Count}.");
+            }
+            return function.Call(this, arguments);
+        }
+
         public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
@@ -153,6 +189,13 @@ namespace CSLox.Interpreting
             return null;
         }
 
+        public object VisitFunctionStmt(Stmt.Function stmt)
+        {
+            var function = new Function(stmt);
+            environment.Define(stmt.Name.Lexeme, function);
+            return null;
+        }
+
         public object VisitIfStmt(Stmt.If stmt)
         {
             if (IsTruthy(Evaluate(stmt.Condition)))
@@ -171,6 +214,13 @@ namespace CSLox.Interpreting
             object value = Evaluate(stmt.Expr);
             Console.WriteLine(value);
             return null;
+        }
+
+        public object VisitReturnStmt(Stmt.Return stmt)
+        {
+            object value = null;
+            if (stmt.Value != null) value = Evaluate(stmt.Value);
+            throw new Return(value);
         }
 
         public object VisitVarStmt(Stmt.Var stmt)

@@ -5,11 +5,14 @@ using CSLox.Lexer;
 
 namespace CSLox.Parsing
 {
+    public delegate void Error(Token token, string messsage);
     public class Parser
     {
         private readonly List<Token> tokens;
         private int current = 0;
         private int loopCount = 0;
+
+        public event Error OnError;
 
         public Parser(List<Token> tokens)
         {
@@ -47,7 +50,7 @@ namespace CSLox.Parsing
                     return new Expr.Assign(name, value);
                 }
 
-                Error(equals, "Invalid assignment target.");
+                Panic(equals, "Invalid assignment target.");
             }
 
             return expr;
@@ -94,6 +97,7 @@ namespace CSLox.Parsing
             if (Match(TokenType.FOR)) return ForStatement();
             if (Match(TokenType.IF)) return IfStatement();
             if (Match(TokenType.PRINT)) return PrintStatement();
+            if (Match(TokenType.RETURN)) return ReturnStatement();
             if (Match(TokenType.WHILE)) return WhileStatement();
             if (Match(TokenType.LEFT_BRACE)) return new Stmt.Block(Block());
             return ExpressionStatement();
@@ -182,6 +186,7 @@ namespace CSLox.Parsing
         {
             try 
             {
+                if (Match(TokenType.FUN)) return Function("function");
                 if (Match(TokenType.VAR)) return VarDeclaration();
                 return Statement();
             } catch (ParsingException)
@@ -196,6 +201,19 @@ namespace CSLox.Parsing
             Expr value = Expression();
             Consume(TokenType.SEMICOLON, "Expect ';' after value.");
             return new Stmt.Print(value);
+        }
+
+        private Stmt ReturnStatement()
+        {
+            Token keyword = Previous();
+            Expr value = null;
+            if (!Check(TokenType.SEMICOLON))
+            {
+                value = Expression();
+            }
+
+            Consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+            return new Stmt.Return(keyword, value);
         }
 
         private Stmt VarDeclaration() 
@@ -229,6 +247,41 @@ namespace CSLox.Parsing
             Expr expr = Expression();
             Consume(TokenType.SEMICOLON, "Expect ';' after expression.");
             return new Stmt.Expression(expr);
+        }
+
+        private Stmt.Function Function(string kind)
+        {
+            Token name = Consume(TokenType.IDENTIFIER, $"Expect {kind} name.");
+            Consume(TokenType.LEFT_PAREN, $"Expect '(' after {kind} name.");
+            List<Token> parameters = new List<Token>();
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    if (parameters.Count >= 255)
+                    {
+                        Error(Peek(), "Can't have more than 255 parameters.");
+                    }
+                    
+                    parameters.Add(Consume(TokenType.IDENTIFIER, "Expect parameter name."));
+                } while (Match(TokenType.COMMA));
+            }
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
+
+            List<Stmt> body;
+            var bodyStmt = Statement();
+            if (bodyStmt is Stmt.Block)
+            {
+                body = ((Stmt.Block)bodyStmt).Statements;
+            } else
+            {
+                body = new List<Stmt>() 
+                {
+                    bodyStmt
+                };
+            }
+
+            return new Stmt.Function(name, parameters, body);
         }
 
         private List<Stmt> Block()
@@ -312,7 +365,44 @@ namespace CSLox.Parsing
                 return new Expr.Unary(oper, right);
             }
 
-            return Primary();
+            return Call();
+        }
+
+        private Expr FinishCall(Expr callee)
+        {
+            List<Expr> arguments = new List<Expr>();
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    if (arguments.Count >= 255)
+                    {
+                        Error(Peek(), "Can't have more than 255 arguments.");
+                    }
+                    arguments.Add(Expression());
+                } while (Match(TokenType.COMMA));
+            }
+
+            Token paren = Consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
+            return new Expr.Call(callee, paren, arguments);
+        }
+
+        private Expr Call()
+        {
+            Expr expr = Primary();
+
+            while (true)
+            {
+                if (Match(TokenType.LEFT_PAREN))
+                {
+                    expr = FinishCall(expr);
+                } else 
+                {
+                    break;
+                }
+            }
+
+            return expr;
         }
 
         private Expr Primary()
@@ -344,12 +434,17 @@ namespace CSLox.Parsing
         private Token Consume(TokenType type, string message)
         {
             if (Check(type)) return Advance();
-            throw Error(Peek(), message);
+            throw Panic(Peek(), message);
         }
 
-        private ParsingException Error(Token token, string message)
+        private ParsingException Panic(Token token, string message)
         {
             return new ParsingException(token, message);
+        }
+
+        private void Error(Token token, string message)
+        {
+            OnError?.Invoke(token, message);
         }
 
         private void Synchronize()

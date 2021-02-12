@@ -100,5 +100,20 @@ namespace CSLox.Parsing
         {
             throw new NotImplementedException();
         }
+
+        public string VisitCallExpr(Expr.Call expr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string VisitFunctionStmt(Stmt.Function stmt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string VisitReturnStmt(Stmt.Return stmt)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

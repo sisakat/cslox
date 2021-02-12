@@ -55,6 +55,11 @@ namespace CSLox.Interpreting.Cli
             {
                 IEnumerable<Token> tokens = scanner.ScanTokens();
                 Parser parser = new Parser(tokens.ToList());
+                parser.OnError += (token, message) => 
+                {
+                    Error(token.Line, message);
+                };
+
                 List<Stmt> statements = parser.Parse();
                 
                 if (statements.Count == 1)
