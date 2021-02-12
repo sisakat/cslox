@@ -5,17 +5,28 @@ using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
-    public class Function : ICallable
+    public class LoxFunction : ICallable
     {
         private readonly Stmt.Function declaration;
         private readonly Environment closure;
+        private readonly bool isInitializer;
 
         public int Arity => declaration.Parameters.Count;
 
-        public Function(Stmt.Function declaration, Environment closure)
+        public LoxFunction(Stmt.Function declaration, 
+            Environment closure,
+            bool isInitializer)
         {
             this.declaration = declaration;
             this.closure = closure;
+            this.isInitializer = isInitializer;
+        }
+
+        public LoxFunction Bind(LoxInstance instance)
+        {
+            var environment = new Environment(closure);
+            environment.Define("this", instance);
+            return new LoxFunction(declaration, environment, isInitializer);
         }
 
         public object Call(Interpreter interpreter, List<object> arguments)
@@ -32,6 +43,7 @@ namespace CSLox.Interpreting
                 interpreter.ExecuteBlock(declaration.Body, environment);
             } catch (Return returnValue)
             {
+                if (isInitializer) return closure.GetAt(0, "this");
                 return returnValue.Value;
             }
 

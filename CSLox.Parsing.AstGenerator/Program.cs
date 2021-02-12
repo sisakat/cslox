@@ -21,9 +21,12 @@ namespace CSLox.Parsing.AstGenerator
                 "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token oper, Expr right",
                 "Call     : Expr callee, Token paren, List<Expr> arguments",
+                "Get      : Expr obj, Token name",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
                 "Logical  : Expr left, Token oper, Expr right",
+                "Set      : Expr obj, Token name, Expr value",
+                "This     : Token keyword",
                 "Unary    : Token oper, Expr right",
                 "Variable : Token name"
             });
@@ -31,6 +34,7 @@ namespace CSLox.Parsing.AstGenerator
             DefineAst(outputDirectory, "Stmt", new List<string>() {
                 "Block      : List<Stmt> statements",
                 "Break      : ",
+                "Class      : Token name, List<Stmt.Function> methods",
                 "Expression : Expr expr",
                 "Function   : Token name, List<Token> parameters, List<Stmt> body",
                 "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",

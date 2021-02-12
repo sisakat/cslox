@@ -20,6 +20,7 @@ namespace CSLox.Interpreting
             environment = globals;
 
             globals.Define("clock", new Clock());
+            globals.Define("readLine", new ReadLine());
         }
 
         public void Interpret(List<Stmt> statements)
@@ -136,6 +137,18 @@ namespace CSLox.Interpreting
             return function.Call(this, arguments);
         }
 
+        public object VisitGetExpr(Expr.Get expr)
+        {
+            object obj = Evaluate(expr.Obj);
+            if (obj is LoxInstance)
+            {
+                return ((LoxInstance)obj).Get(expr.Name);
+            }
+
+            throw new InterpretingException(expr.Name,
+                "Only instances have properties.");
+        }
+
         public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
@@ -159,6 +172,26 @@ namespace CSLox.Interpreting
             }
 
             return Evaluate(expr.Right);
+        }
+
+        public object VisitSetExpr(Expr.Set expr)
+        {
+            object obj = Evaluate(expr.Obj);
+
+            if (!(obj is LoxInstance))
+            {
+                throw new InterpretingException(expr.Name,
+                    "Only instances have fields.");
+            }
+
+            object value = Evaluate(expr.Value);
+            ((LoxInstance)obj).Set(expr.Name, value);
+            return value;
+        }
+
+        public object VisitThisExpr(Expr.This expr)
+        {
+            return LookUpVariable(expr.Keyword, expr);
         }
 
         public object VisitUnaryExpr(Expr.Unary expr)
@@ -218,7 +251,9 @@ namespace CSLox.Interpreting
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new Function(stmt, environment);
+            var function = new LoxFunction(stmt,
+                environment,
+                false);
             environment.Define(stmt.Name.Lexeme, function);
             return null;
         }
@@ -276,6 +311,24 @@ namespace CSLox.Interpreting
         public object VisitBlockStmt(Stmt.Block stmt)
         {
             ExecuteBlock(stmt.Statements, new Environment(environment));
+            return null;
+        }
+
+        public object VisitClassStmt(Stmt.Class stmt)
+        {
+            environment.Define(stmt.Name.Lexeme, null);
+
+            Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
+            foreach (var method in stmt.Methods)
+            {
+                var function = new LoxFunction(method, 
+                    environment, 
+                    method.Name.Lexeme == stmt.Name.Lexeme);
+                methods[method.Name.Lexeme] = function;
+            }
+
+            var lclass = new LoxClass(stmt.Name.Lexeme, methods);
+            environment.Assign(stmt.Name, lclass);
             return null;
         }
 

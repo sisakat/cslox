@@ -10,6 +10,7 @@ namespace CSLox.Parsing
         {
             R VisitBlockStmt(Block stmt);
             R VisitBreakStmt(Break stmt);
+            R VisitClassStmt(Class stmt);
             R VisitExpressionStmt(Expression stmt);
             R VisitFunctionStmt(Function stmt);
             R VisitIfStmt(If stmt);
@@ -46,6 +47,26 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitBreakStmt(this);
+            }
+        }
+
+        public class Class : Stmt
+        {
+            readonly Token name;
+            readonly List<Stmt.Function> methods;
+
+            public Token Name => name;
+            public List<Stmt.Function> Methods => methods;
+
+            public Class (Token name, List<Stmt.Function> methods)
+            {
+                this.name = name;
+                this.methods = methods;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitClassStmt(this);
             }
         }
 

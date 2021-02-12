@@ -12,6 +12,7 @@ namespace CSLox.Interpreting
         private readonly Stack<Dictionary<string, bool>> scopes 
             = new Stack<Dictionary<string, bool>>();
         private FunctionType currentFunction = FunctionType.NONE;
+        private ClassType currentClass = ClassType.NONE;
 
         public Resolver(Interpreter interpreter)
         {
@@ -119,6 +120,33 @@ namespace CSLox.Interpreting
             return null;
         }
 
+        public object VisitClassStmt(Stmt.Class stmt)
+        {
+            var enclosingType = currentClass;
+            currentClass = ClassType.CLASS;
+
+            Declare(stmt.Name);
+            Define(stmt.Name);
+
+            BeginScope();
+            scopes.Peek()["this"] = true;
+
+            foreach (var method in stmt.Methods)
+            {
+                var declaration = FunctionType.METHOD;
+                if (method.Name.Lexeme == stmt.Name.Lexeme)
+                {
+                    declaration = FunctionType.INITIALIZER;
+                }
+                ResolveFunction(method, declaration);
+            }
+
+            EndScope();
+
+            currentClass = enclosingType;
+            return null;
+        }
+
         public object VisitBreakStmt(Stmt.Break stmt)
         {
             throw new NotImplementedException();
@@ -132,6 +160,12 @@ namespace CSLox.Interpreting
                 Resolve(argument);
             }
 
+            return null;
+        }
+
+        public object VisitGetExpr(Expr.Get expr)
+        {
+            Resolve(expr.Obj);
             return null;
         }
 
@@ -175,6 +209,26 @@ namespace CSLox.Interpreting
             return null;
         }
 
+        public object VisitSetExpr(Expr.Set expr)
+        {
+            Resolve(expr.Value);
+            Resolve(expr.Obj);
+            return null;
+        }
+
+        public object VisitThisExpr(Expr.This expr)
+        {
+            if (currentClass == ClassType.NONE)
+            {
+                throw new InterpretingException(expr.Keyword,
+                    "Can't use 'this' outside of a class.");
+                return null;
+            }
+
+            ResolveLocal(expr, expr.Keyword);
+            return null;
+        }
+
         public object VisitPrintStmt(Stmt.Print stmt)
         {
             Resolve(stmt.Expr);
@@ -191,6 +245,12 @@ namespace CSLox.Interpreting
 
             if (stmt.Value != null)
             {
+                if (currentFunction == FunctionType.INITIALIZER)
+                {
+                    throw new InterpretingException(stmt.Keyword,
+                        "Can't return a value from an initializer.");
+                }
+
                 Resolve(stmt.Value);
             }
 

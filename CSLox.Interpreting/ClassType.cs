@@ -5,11 +5,9 @@ using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
-    public enum FunctionType
+    public enum ClassType
     {
         NONE,
-        FUNCTION,
-        INITIALIZER,
-        METHOD
+        CLASS
     }
 }

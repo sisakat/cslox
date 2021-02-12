@@ -11,9 +11,12 @@ namespace CSLox.Parsing
             R VisitAssignExpr(Assign expr);
             R VisitBinaryExpr(Binary expr);
             R VisitCallExpr(Call expr);
+            R VisitGetExpr(Get expr);
             R VisitGroupingExpr(Grouping expr);
             R VisitLiteralExpr(Literal expr);
             R VisitLogicalExpr(Logical expr);
+            R VisitSetExpr(Set expr);
+            R VisitThisExpr(This expr);
             R VisitUnaryExpr(Unary expr);
             R VisitVariableExpr(Variable expr);
         }
@@ -83,6 +86,26 @@ namespace CSLox.Parsing
             }
         }
 
+        public class Get : Expr
+        {
+            readonly Expr obj;
+            readonly Token name;
+
+            public Expr Obj => obj;
+            public Token Name => name;
+
+            public Get (Expr obj, Token name)
+            {
+                this.obj = obj;
+                this.name = name;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitGetExpr(this);
+            }
+        }
+
         public class Grouping : Expr
         {
             readonly Expr expression;
@@ -137,6 +160,46 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitLogicalExpr(this);
+            }
+        }
+
+        public class Set : Expr
+        {
+            readonly Expr obj;
+            readonly Token name;
+            readonly Expr value;
+
+            public Expr Obj => obj;
+            public Token Name => name;
+            public Expr Value => value;
+
+            public Set (Expr obj, Token name, Expr value)
+            {
+                this.obj = obj;
+                this.name = name;
+                this.value = value;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitSetExpr(this);
+            }
+        }
+
+        public class This : Expr
+        {
+            readonly Token keyword;
+
+            public Token Keyword => keyword;
+
+            public This (Token keyword)
+            {
+                this.keyword = keyword;
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitThisExpr(this);
             }
         }
 
