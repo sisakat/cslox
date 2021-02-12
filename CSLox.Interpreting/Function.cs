@@ -8,17 +8,19 @@ namespace CSLox.Interpreting
     public class Function : ICallable
     {
         private readonly Stmt.Function declaration;
+        private readonly Environment closure;
 
         public int Arity => declaration.Parameters.Count;
 
-        public Function(Stmt.Function declaration)
+        public Function(Stmt.Function declaration, Environment closure)
         {
             this.declaration = declaration;
+            this.closure = closure;
         }
 
         public object Call(Interpreter interpreter, List<object> arguments)
         {
-            var environment = new Environment(interpreter.globals);
+            var environment = new Environment(closure);
             for (int i = 0; i < declaration.Parameters.Count; i++)
             {
                 environment.Define(declaration.Parameters[i].Lexeme,

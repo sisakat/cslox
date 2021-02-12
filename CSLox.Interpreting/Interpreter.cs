@@ -10,6 +10,7 @@ namespace CSLox.Interpreting
     {
         internal readonly Environment globals = new Environment();
         private Environment environment;
+        private readonly Dictionary<Expr, int> locals = new Dictionary<Expr, int>();
         private bool breaking = false;
 
         public event Error OnError;
@@ -32,6 +33,11 @@ namespace CSLox.Interpreting
         private void Execute(Stmt statement)
         {
             statement?.Accept(this);
+        }
+
+        internal void Resolve(Expr expr, int depth)
+        {
+            locals[expr] = depth;
         }
 
         internal void ExecuteBlock(List<Stmt> statements, Environment environment)
@@ -174,13 +180,34 @@ namespace CSLox.Interpreting
         public object VisitAssignExpr(Expr.Assign expr) 
         {
             object value = Evaluate(expr.Value);
-            environment.Assign(expr.Name, value);
+
+            int distance;
+            if (locals.TryGetValue(expr, out distance)) 
+            {
+                environment.AssignAt(distance, expr.Name, value);
+            } else 
+            {
+                globals.Assign(expr.Name, value);
+            }
+            
             return value;
         }
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            return environment.Get(expr.Name);
+            return LookUpVariable(expr.Name, expr);
+        }
+
+        private object LookUpVariable(Token name, Expr expr)
+        {
+            int distance;
+            if (locals.TryGetValue(expr, out distance))
+            {
+                return environment.GetAt(distance, name.Lexeme);
+            } else
+            {
+                return globals.Get(name);
+            }
         }
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
@@ -191,7 +218,7 @@ namespace CSLox.Interpreting
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new Function(stmt);
+            var function = new Function(stmt, environment);
             environment.Define(stmt.Name.Lexeme, function);
             return null;
         }

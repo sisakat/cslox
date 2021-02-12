@@ -53,15 +53,14 @@ namespace CSLox.Interpreting.Cli
 
             try
             {
-                IEnumerable<Token> tokens = scanner.ScanTokens();
-                Parser parser = new Parser(tokens.ToList());
+                var tokens = scanner.ScanTokens();
+                var parser = new Parser(tokens.ToList());
                 parser.OnError += (token, message) => 
                 {
                     Error(token.Line, message);
                 };
 
-                List<Stmt> statements = parser.Parse();
-                
+                var statements = parser.Parse();
                 if (statements.Count == 1)
                 {
                     var statement = statements[0];
@@ -71,6 +70,9 @@ namespace CSLox.Interpreting.Cli
                         statements.Add(new Stmt.Print(((Stmt.Expression)statement).Expr));
                     }
                 }
+
+                var resolver = new Resolver(interpreter);
+                resolver.Resolve(statements);
 
                 interpreter.Interpret(statements);
             } catch (ScanningException ex)
