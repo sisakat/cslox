@@ -11,7 +11,7 @@ namespace CSLox.Interpreting
         internal readonly Environment globals = new Environment();
         private Environment environment;
         private readonly Dictionary<Expr, int> locals = new Dictionary<Expr, int>();
-        private bool breaking = false;
+        private int breaking = 0;
 
         public event Error OnError;
 
@@ -50,9 +50,9 @@ namespace CSLox.Interpreting
 
                 foreach (var statement in statements) 
                 {
-                    if (breaking)
+                    if (breaking > 0)
                     {
-                        break;
+                        throw new Exception();
                     }
                     Execute(statement);
                 }
@@ -196,7 +196,15 @@ namespace CSLox.Interpreting
             {
                 LoxClass superclass = (LoxClass)environment.GetAt(distance, "super");
                 LoxInstance obj = (LoxInstance)environment.GetAt(distance - 1, "this");
-                LoxFunction method = superclass.FindMethod(expr.Method.Lexeme);
+
+                LoxFunction method = null;
+                if (expr.Method != null)
+                {
+                    method = superclass.FindMethod(expr.Method.Lexeme);
+                } else 
+                {
+                    method = superclass.FindMethod(superclass.Name);
+                }
 
                 if (method == null)
                 {
@@ -320,12 +328,16 @@ namespace CSLox.Interpreting
 
         public object VisitWhileStmt(Stmt.While stmt)
         {
-            while (IsTruthy(Evaluate(stmt.Condition)) && !breaking)
+            try {
+            while (IsTruthy(Evaluate(stmt.Condition)))
             {
+                
                 Execute(stmt.Body);
+                
             }
-            breaking = false;
-
+} catch(Exception ex) {
+                    breaking--;
+                }
             return null;
         }
 
@@ -380,7 +392,14 @@ namespace CSLox.Interpreting
 
         public object VisitBreakStmt(Stmt.Break stmt)
         {
-            breaking = true;
+            if (stmt.Loop == null)
+            {
+                breaking = 1;
+            } else 
+            {
+                breaking = (int)(double)stmt.Loop.Literal;
+            }
+
             return null;
         }
 

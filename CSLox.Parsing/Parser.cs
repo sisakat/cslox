@@ -109,8 +109,17 @@ namespace CSLox.Parsing
 
         private Stmt BreakStatement()
         {
-            Consume(TokenType.SEMICOLON, "Expect ';' after 'break'.");
-            return new Stmt.Break();
+            Stmt.Break stmt = null;
+            if (Match(TokenType.NUMBER))
+            {
+                stmt = new Stmt.Break(Previous());
+            } else
+            {
+                stmt = new Stmt.Break(null);
+            }
+            
+            Consume(TokenType.SEMICOLON, "Expected ';' after 'break'.");
+            return stmt;
         }
 
         private Stmt ForStatement()
@@ -452,9 +461,19 @@ namespace CSLox.Parsing
             if (Match(TokenType.SUPER))
             {
                 Token keyword = Previous();
-                Consume(TokenType.DOT, "Expect '.' after 'super'.");
-                Token method = Consume(TokenType.IDENTIFIER, "Expect superclass method name.");
-                return new Expr.Super(keyword, method);
+
+                if (Match(TokenType.DOT))
+                {
+                    Token method = Consume(TokenType.IDENTIFIER, "Expect superclass method name.");
+                    return new Expr.Super(keyword, method);
+                } else if (Match(TokenType.LEFT_PAREN))
+                {
+                    return FinishCall(new Expr.Super(keyword, null));
+                } else 
+                {
+                    throw new ParsingException(keyword,
+                        "Expected property accessor or call on 'super'.");
+                }
             }
 
             if (Match(TokenType.THIS)) return new Expr.This(Previous());

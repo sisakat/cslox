@@ -38,10 +38,13 @@ namespace CSLox.Parsing
 
         public class Break : Stmt
         {
+            readonly Token loop;
 
+            public Token Loop => loop;
 
-            public Break ()
+            public Break (Token loop)
             {
+                this.loop = loop;
             }
 
             public override R Accept<R>(Visitor<R> visitor)

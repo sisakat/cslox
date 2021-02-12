@@ -173,7 +173,7 @@ namespace CSLox.Interpreting
 
         public object VisitBreakStmt(Stmt.Break stmt)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public object VisitCallExpr(Expr.Call expr)
@@ -251,7 +251,7 @@ namespace CSLox.Interpreting
                 throw new InterpretingException(expr.Keyword,
                     "Can't use 'super' in class with no superclass.");
             }
-            
+
             ResolveLocal(expr, expr.Keyword);
             return null;
         }

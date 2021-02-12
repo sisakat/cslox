@@ -34,7 +34,7 @@ namespace CSLox.Parsing.AstGenerator
 
             DefineAst(outputDirectory, "Stmt", new List<string>() {
                 "Block      : List<Stmt> statements",
-                "Break      : ",
+                "Break      : Token loop",
                 "Class      : Token name, Expr.Variable superclass, List<Stmt.Function> methods",
                 "Expression : Expr expr",
                 "Function   : Token name, List<Token> parameters, List<Stmt> body",
