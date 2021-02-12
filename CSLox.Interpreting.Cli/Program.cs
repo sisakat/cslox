@@ -42,18 +42,21 @@ namespace CSLox.Interpreting.Cli
                 Console.Write("> ");
                 string line = Console.ReadLine();
                 if (string.IsNullOrEmpty(line)) break;
-                Run(line);
+                Run(line, true);
                 hadError = false;
             }
         }
 
-        private static void Run(string source)
+        private static void Run(string source, bool repl = false)
         {
             Scanner scanner = new Scanner(source);
 
             try
             {
+                // Scan (lexing) tokens
                 var tokens = scanner.ScanTokens();
+
+                // Parse tokens into an AST
                 var parser = new Parser(tokens.ToList());
                 parser.OnError += (token, message) => 
                 {
@@ -61,7 +64,9 @@ namespace CSLox.Interpreting.Cli
                 };
 
                 var statements = parser.Parse();
-                if (statements.Count == 1)
+
+                // Convert single expressions into print statements (for REPL)
+                if (repl && statements.Count == 1)
                 {
                     var statement = statements[0];
                     if (statement is Stmt.Expression)
@@ -71,9 +76,11 @@ namespace CSLox.Interpreting.Cli
                     }
                 }
 
+                // Semantic analysis for variables and scopes
                 var resolver = new Resolver(interpreter);
                 resolver.Resolve(statements);
 
+                // Interpret and run
                 interpreter.Interpret(statements);
             } catch (ScanningException ex)
             {
