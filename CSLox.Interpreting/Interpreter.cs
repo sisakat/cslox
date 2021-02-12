@@ -53,7 +53,7 @@ namespace CSLox.Interpreting
                 {
                     if (breaking > 0)
                     {
-                        throw new Exception();
+                        throw new Break();
                     }
                     Execute(statement);
                 }
@@ -335,7 +335,7 @@ namespace CSLox.Interpreting
                 {
                     Execute(stmt.Body);
                 }
-            } catch(Exception) {
+            } catch(Break) {
                 breaking--;
             }
 
