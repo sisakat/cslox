@@ -14,6 +14,7 @@ namespace CSLox.Lexer
         private static readonly Dictionary<String, TokenType> keywords =
             new Dictionary<string, TokenType>() {
                 { "and", TokenType.AND },
+                { "break", TokenType.BREAK },
                 { "class", TokenType.CLASS },
                 { "else", TokenType.ELSE },
                 { "false", TokenType.FALSE },

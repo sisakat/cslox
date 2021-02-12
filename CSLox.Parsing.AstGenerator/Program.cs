@@ -29,6 +29,7 @@ namespace CSLox.Parsing.AstGenerator
 
             DefineAst(outputDirectory, "Stmt", new List<string>() {
                 "Block      : List<Stmt> statements",
+                "Break      : ",
                 "Expression : Expr expr",
                 "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Print      : Expr expr",

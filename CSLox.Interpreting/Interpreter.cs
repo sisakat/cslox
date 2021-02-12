@@ -8,6 +8,7 @@ namespace CSLox.Interpreting
     public class Interpreter : Expr.Visitor<Object>, Stmt.Visitor<Object>
     {
         private Environment environment = new Environment();
+        private bool breaking = false;
 
         public void Interpret(List<Stmt> statements)
         {
@@ -31,6 +32,10 @@ namespace CSLox.Interpreting
 
                 foreach (var statement in statements) 
                 {
+                    if (breaking)
+                    {
+                        break;
+                    }
                     Execute(statement);
                 }
             } finally
@@ -182,10 +187,11 @@ namespace CSLox.Interpreting
 
         public object VisitWhileStmt(Stmt.While stmt)
         {
-            while (IsTruthy(Evaluate(stmt.Condition)))
+            while (IsTruthy(Evaluate(stmt.Condition)) && !breaking)
             {
                 Execute(stmt.Body);
             }
+            breaking = false;
 
             return null;
         }
@@ -193,6 +199,12 @@ namespace CSLox.Interpreting
         public object VisitBlockStmt(Stmt.Block stmt)
         {
             ExecuteBlock(stmt.Statements, new Environment(environment));
+            return null;
+        }
+
+        public object VisitBreakStmt(Stmt.Break stmt)
+        {
+            breaking = true;
             return null;
         }
 

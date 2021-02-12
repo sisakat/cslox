@@ -95,5 +95,10 @@ namespace CSLox.Parsing
         {
             throw new NotImplementedException();
         }
+
+        public string VisitBreakStmt(Stmt.Break stmt)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

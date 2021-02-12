@@ -9,6 +9,7 @@ namespace CSLox.Parsing
         public interface Visitor<R>
         {
             R VisitBlockStmt(Block stmt);
+            R VisitBreakStmt(Break stmt);
             R VisitExpressionStmt(Expression stmt);
             R VisitIfStmt(If stmt);
             R VisitPrintStmt(Print stmt);
@@ -29,6 +30,20 @@ namespace CSLox.Parsing
             public override R Accept<R>(Visitor<R> visitor)
             {
                 return visitor.VisitBlockStmt(this);
+            }
+        }
+
+        public class Break : Stmt
+        {
+
+
+            public Break ()
+            {
+            }
+
+            public override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitBreakStmt(this);
             }
         }
 
