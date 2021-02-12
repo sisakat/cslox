@@ -21,6 +21,7 @@ namespace CSLox.Interpreting
 
             globals.Define("clock", new Clock());
             globals.Define("readLine", new ReadLine());
+            globals.Define("mod", new Modulus());
         }
 
         public void Interpret(List<Stmt> statements)
@@ -328,16 +329,16 @@ namespace CSLox.Interpreting
 
         public object VisitWhileStmt(Stmt.While stmt)
         {
-            try {
-            while (IsTruthy(Evaluate(stmt.Condition)))
+            try 
             {
-                
-                Execute(stmt.Body);
-                
-            }
-} catch(Exception ex) {
-                    breaking--;
+                while (IsTruthy(Evaluate(stmt.Condition)))
+                {
+                    Execute(stmt.Body);
                 }
+            } catch(Exception) {
+                breaking--;
+            }
+
             return null;
         }
 
