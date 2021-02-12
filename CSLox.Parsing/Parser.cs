@@ -9,7 +9,7 @@ namespace CSLox.Parsing
     {
         private readonly List<Token> tokens;
         private int current = 0;
-        private bool looping = false;
+        private int loopCount = 0;
 
         public Parser(List<Token> tokens)
         {
@@ -85,7 +85,7 @@ namespace CSLox.Parsing
         {
             if (Match(TokenType.BREAK))
             {
-                if (looping)
+                if (loopCount > 0)
                 {
                     return BreakStatement();
                 }
@@ -135,9 +135,9 @@ namespace CSLox.Parsing
             }
             Consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
 
-            looping = true;
+            loopCount++;
             Stmt body = Statement();
-            looping = false;
+            loopCount--;
 
             if (increment != null)
             {
@@ -217,9 +217,9 @@ namespace CSLox.Parsing
             Consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
             Expr condition = Expression();
             Consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
-            looping = true;
+            loopCount++;
             Stmt body = Statement();
-            looping = false;
+            loopCount--;
 
             return new Stmt.While(condition, body);
         }
