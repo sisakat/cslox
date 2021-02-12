@@ -53,14 +53,17 @@ namespace CSLox.Parsing
         public class Class : Stmt
         {
             readonly Token name;
+            readonly Expr.Variable superclass;
             readonly List<Stmt.Function> methods;
 
             public Token Name => name;
+            public Expr.Variable Superclass => superclass;
             public List<Stmt.Function> Methods => methods;
 
-            public Class (Token name, List<Stmt.Function> methods)
+            public Class (Token name, Expr.Variable superclass, List<Stmt.Function> methods)
             {
                 this.name = name;
+                this.superclass = superclass;
                 this.methods = methods;
             }
 

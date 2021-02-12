@@ -189,6 +189,27 @@ namespace CSLox.Interpreting
             return value;
         }
 
+        public object VisitSuperExpr(Expr.Super expr)
+        {
+            int distance;
+            if (locals.TryGetValue(expr, out distance))
+            {
+                LoxClass superclass = (LoxClass)environment.GetAt(distance, "super");
+                LoxInstance obj = (LoxInstance)environment.GetAt(distance - 1, "this");
+                LoxFunction method = superclass.FindMethod(expr.Method.Lexeme);
+
+                if (method == null)
+                {
+                    throw new InterpretingException(expr.Method,
+                        $"Undefined property '{expr.Method.Lexeme}'.");
+                }
+
+                return method.Bind(obj);
+            }
+
+            return null;
+        }
+
         public object VisitThisExpr(Expr.This expr)
         {
             return LookUpVariable(expr.Keyword, expr);
@@ -316,7 +337,24 @@ namespace CSLox.Interpreting
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
+            object superclass = null;
+            if (stmt.Superclass != null)
+            {
+                superclass = Evaluate(stmt.Superclass);
+                if (!(superclass is LoxClass))
+                {
+                    throw new InterpretingException(stmt.Superclass.Name,
+                        "Superclass must be a class.");
+                }
+            }
+
             environment.Define(stmt.Name.Lexeme, null);
+
+            if (stmt.Superclass != null)
+            {
+                environment = new Environment(environment);
+                environment.Define("super", superclass);
+            }
 
             Dictionary<string, LoxFunction> methods = new Dictionary<string, LoxFunction>();
             foreach (var method in stmt.Methods)
@@ -327,7 +365,15 @@ namespace CSLox.Interpreting
                 methods[method.Name.Lexeme] = function;
             }
 
-            var lclass = new LoxClass(stmt.Name.Lexeme, methods);
+            var lclass = new LoxClass(stmt.Name.Lexeme, 
+                (LoxClass)superclass, 
+                methods);
+            
+            if (stmt.Superclass != null)
+            {
+                environment = environment.Enclosing;
+            }
+
             environment.Assign(stmt.Name, lclass);
             return null;
         }

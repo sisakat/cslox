@@ -10,6 +10,8 @@ namespace CSLox.Interpreting
         private readonly Environment enclosing;
         private readonly Dictionary<string, object> values = new Dictionary<string, object>();
 
+        public Environment Enclosing => enclosing;
+
         public Environment()
         {
             enclosing = null;

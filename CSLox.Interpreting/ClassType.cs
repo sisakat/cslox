@@ -8,6 +8,7 @@ namespace CSLox.Interpreting
     public enum ClassType
     {
         NONE,
-        CLASS
+        CLASS,
+        SUBCLASS
     }
 }

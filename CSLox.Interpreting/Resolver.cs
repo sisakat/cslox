@@ -128,6 +128,25 @@ namespace CSLox.Interpreting
             Declare(stmt.Name);
             Define(stmt.Name);
 
+            if (stmt.Superclass != null &&
+                stmt.Name.Lexeme == stmt.Superclass.Name.Lexeme)
+            {
+                throw new InterpretingException(stmt.Name,
+                    "A class cannot inherit from itself.");
+            }
+
+            if (stmt.Superclass != null)
+            {
+                currentClass = ClassType.SUBCLASS;
+                Resolve(stmt.Superclass);
+            }
+
+            if (stmt.Superclass != null)
+            {
+                BeginScope();
+                scopes.Peek()["super"] = true;
+            }
+
             BeginScope();
             scopes.Peek()["this"] = true;
 
@@ -142,6 +161,11 @@ namespace CSLox.Interpreting
             }
 
             EndScope();
+
+            if (stmt.Superclass != null)
+            {
+                EndScope();
+            }
 
             currentClass = enclosingType;
             return null;
@@ -213,6 +237,22 @@ namespace CSLox.Interpreting
         {
             Resolve(expr.Value);
             Resolve(expr.Obj);
+            return null;
+        }
+
+        public object VisitSuperExpr(Expr.Super expr)
+        {
+            if (currentClass == ClassType.NONE)
+            {
+                throw new InterpretingException(expr.Keyword,
+                    "Can't use 'super' outside of a class.");
+            } else if (currentClass != ClassType.SUBCLASS)
+            {
+                throw new InterpretingException(expr.Keyword,
+                    "Can't use 'super' in class with no superclass.");
+            }
+            
+            ResolveLocal(expr, expr.Keyword);
             return null;
         }
 

@@ -8,6 +8,7 @@ namespace CSLox.Interpreting
     public class LoxClass : ICallable
     {
         private readonly string name;
+        private readonly LoxClass superclass;
         private readonly Dictionary<string, LoxFunction> methods;
 
         public string Name => name;
@@ -22,9 +23,12 @@ namespace CSLox.Interpreting
             }
         }
 
-        public LoxClass(string name, Dictionary<string, LoxFunction> methods)
+        public LoxClass(string name, 
+            LoxClass superclass,
+            Dictionary<string, LoxFunction> methods)
         {
             this.name = name;
+            this.superclass = superclass;
             this.methods = methods;
         }
 
@@ -33,6 +37,11 @@ namespace CSLox.Interpreting
             if (methods.ContainsKey(name))
             {
                 return methods[name];
+            }
+
+            if (superclass != null)
+            {
+                return superclass.FindMethod(name);
             }
 
             return null;
