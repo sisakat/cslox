@@ -8,7 +8,7 @@ LD = gcc # use C++ linker
 LDFLAGS = -lm
 
 CFILES = $(wildcard *.c) # collect c files
-OFILES = $(addprefix obj/,$(notdir $(CFILES:.c=.o)))
+OFILES = $(CFILES:.c=.o)
 
 all: clean depend $(PROGRAM)
 
