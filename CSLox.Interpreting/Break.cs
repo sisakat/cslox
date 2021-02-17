@@ -5,10 +5,10 @@ using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
-    public class Break : Exception
-    {
-        public Break() : base()
-        {
-        }
-    }
+  public class Break : Exception
+  {
+    public Break()
+      : base()
+    { }
+  }
 }

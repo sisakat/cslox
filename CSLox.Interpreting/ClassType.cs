@@ -5,10 +5,10 @@ using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
-    public enum ClassType
-    {
-        NONE,
-        CLASS,
-        SUBCLASS
-    }
+  public enum ClassType
+  {
+    NONE,
+    CLASS,
+    SUBCLASS
+  }
 }

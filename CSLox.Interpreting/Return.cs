@@ -5,14 +5,14 @@ using CSLox.Parsing;
 
 namespace CSLox.Interpreting
 {
-    public class Return : Exception
-    {
-        private object value;
-        public object Value => value;
+  public class Return : Exception
+  {
+    private object value;
+    public object Value => value;
 
-        public Return(object value) : base()
-        {
-            this.value = value;
-        }
+    public Return(object value) : base()
+    {
+      this.value = value;
     }
+  }
 }
