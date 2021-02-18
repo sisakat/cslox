@@ -1,10 +1,10 @@
 PROGRAM = clox
 ARGUMENTS =
 
-CC = gcc # use C++ compiler
+CC = clang # use C compiler
 CPPFLAGS = -pedantic -Wall -Wextra -std=c11 -ggdb # use C++ standard
 
-LD = gcc # use C++ linker
+LD = clang # use C linker
 LDFLAGS = -lm
 
 CFILES = $(wildcard *.c) # collect c files
