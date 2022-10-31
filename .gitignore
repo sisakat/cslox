@@ -484,3 +484,12 @@ $RECYCLE.BIN/
 *.depend
 
 *.lox
+
+
+*.ppu
+*.o
+*.lpi
+*.lps
+PasLox/lib
+PasLox/backup
+

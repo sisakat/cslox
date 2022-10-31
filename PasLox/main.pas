@@ -3,7 +3,45 @@ program main;
 {$mode objfpc}
 
 uses
-  SysUtils, chunkunit, debugunit, valueunit, vmunit;
+  SysUtils, Classes, chunkunit, debugunit, valueunit, vmunit;
+
+function ReadFile(FileName : String) : String;
+var
+  StringList : TStringList;
+begin
+  Result := '';
+  StringList := TStringList.Create;
+  try
+    StringList.LoadFromFile(FileName);
+    Result := StringList.Text;
+  finally
+    FreeAndNil(StringList);
+  end;
+end;
+
+procedure Repl(VM : TVM);
+var
+  Line : String;
+begin
+  while TRUE do
+  begin
+    Write('> ');
+    ReadLn(Line);
+    VM.Interpret(Line);
+  end;
+end;
+
+procedure RunFile(VM : TVM; FileName : String);
+var
+  Source          : String;
+  InterpretResult : TInterpretResult;
+begin
+  Source          := ReadFile    (FileName);
+  InterpretResult := VM.Interpret(Source  );
+
+  if (InterpretResult = INTERPERT_COMPILE_ERROR) then Halt(65);
+  if (InterpretResult = INTERPERT_RUNTIME_ERROR) then Halt(70);
+end;
 
 var
   VM       : TVM;
@@ -13,14 +51,17 @@ begin
   VM    := TVM.Create;
   Chunk := TChunk.Create;
   try
-    Constant := Chunk.AddConstant(1.2);
-    Chunk.WriteChunk(OP_CONSTANT, 123); 
-    Chunk.WriteChunk(Constant, 123);
-    Chunk.WriteChunk(OP_RETURN, 123);
-    DisassembleChunk(Chunk, 'Test Chunk');
-    VM.Interpret(Chunk);
+    if      (ParamCount = 0) then Repl(VM)
+    else if (ParamCount = 1) then RunFile(VM, ParamStr(1))
+    else
+    begin
+      WriteLn('Usage: paslox [path]');
+      ReadLn;
+      Exit;
+    end; // if ()
   finally
     FreeAndNil(VM);
     FreeAndNil(Chunk);
   end;
+  ReadLn;
 end.

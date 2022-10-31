@@ -48,7 +48,12 @@ begin
 
   case TOpCode(Value) of
     OP_CONSTANT: Result := ConstantInstruction('OP_CONSTANT', Chunk, Offset);
-    OP_RETURN  : Result := SimpleInstruction('OP_RETURN', Offset);
+    OP_ADD     : Result := SimpleInstruction  ('OP_ADD'     , Offset       );
+    OP_SUBTRACT: Result := SimpleInstruction  ('OP_SUBTRACT', Offset       );
+    OP_MULTIPLY: Result := SimpleInstruction  ('OP_MULTIPLY', Offset       );
+    OP_DIVIDE  : Result := SimpleInstruction  ('OP_DIVIDE'  , Offset       );
+    OP_NEGATE  : Result := SimpleInstruction  ('OP_NEGATE'  , Offset       );
+    OP_RETURN  : Result := SimpleInstruction  ('OP_RETURN'  , Offset       );
     else WriteLn(Format('Unknown opcode %0:d', [Value]));
   end;
 end; // DisassembleInstruction()
